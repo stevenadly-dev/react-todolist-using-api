@@ -1,0 +1,60 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500&display=swap");
+@import "./scss/variables";
+* {
+  font-family: "Montserrat", sans-serif;
+  // font-family: "Reenie Beanie", arial, sans-serif;
+  font-weight: bold !important;
+  box-sizing: border-box;
+}
+.form-control {
+  border: 1px solid black;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  &:focus {
+    outline: none !important;
+    border-color: black !important;
+    box-shadow: none !important;
+  }
+}
+button {
+  &:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+a {
+  font-size: 1.3em;
+}
+label {
+  font-size: 1.5em;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: $main;
+  box-shadow: 0 0 1px $main;
+}
+
+.selectionTable::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+.selectionTable::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: $main;
+  box-shadow: 0 0 1px $main;
+}
+
+input {
+  &:focus {
+    outline: none;
+  }
+}

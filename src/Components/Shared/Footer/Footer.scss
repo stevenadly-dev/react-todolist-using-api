@@ -1,0 +1,13 @@
+@import "../../../scss/variables";
+
+footer {
+  padding: 0.5em 0;
+  background: $main;
+  color: white;
+  text-align: center;
+
+  h3 {
+    font-size: 1.2em;
+    padding-bottom: 0;
+  }
+}

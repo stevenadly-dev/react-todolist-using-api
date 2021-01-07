@@ -1,0 +1,55 @@
+@import "../../../scss/variables";
+@import "~bootstrap/scss/bootstrap";
+
+.login-section {
+  width: 100%;
+  height: 100vh;
+  min-height: 500px;
+  background: url("../../../Assets/images/homebg.jpg");
+  background-size: cover;
+  background-position: right bottom;
+  display: flex;
+  // padding-top: 60px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-contianer {
+  padding: 2em;
+  box-shadow: 1px 1px 15px rgba($color: #000000, $alpha: 0.2);
+  background: white;
+  position: relative;
+
+  .title {
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .form {
+    margin-top: 1em;
+
+    .reg-link {
+      font-size: 1em;
+      color: $main !important;
+    }
+    .submit-btn {
+      width: 100%;
+      display: block;
+      margin-top: 1em;
+      background: $main;
+      color: white !important;
+      border: none;
+      box-shadow: none;
+      min-height: 45px;
+      font-size: 1.5em;
+      // text-transform: uppercase;
+      &:disabled {
+        background: #ddd;
+      }
+    }
+  }
+}
+
+.error-ul {
+  margin-bottom: 0px;
+}

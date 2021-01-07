@@ -1,0 +1,39 @@
+@import "../../../scss/variables";
+// @import "~bootstrap/scss/bootstrap";
+
+nav {
+  background-color: $main;
+  width: 100%;
+  // position: fixed !important;
+  .container {
+    .navbar-brand {
+      font-size: 2.5em;
+      color: white;
+    }
+  }
+}
+
+.navbar-collapse {
+  transition-duration: 10s !important;
+  text-align: center;
+}
+.nav-item {
+  display: inline-flex;
+  .nav-link {
+    color: white !important;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .logout-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    margin: auto;
+    font-size: 1.3em;
+    font-weight: bold;
+
+    :disabled {
+      opacity: 0.5;
+    }
+  }
+}
