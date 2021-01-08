@@ -11,8 +11,8 @@ import TodoList from "./Components/TodoList/TodoList";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import IsAuthunticatedRoute from "./Components/IsAuthunticatedRoute";
+import TodoPage from "./Components/TodoList/TodoPage/TodoPage";
 import * as authservice from "./Services/AuthService";
-
 export let userTokenContext = createContext();
 function App() {
   const [userToken, setUserToken] = useState("");
@@ -48,6 +48,14 @@ function App() {
             exact
             path="/todolist"
             component={TodoList}
+            userToken={userToken}
+          ></ProtectedRoute>
+
+
+          <ProtectedRoute
+            exact
+            path="/todolist/:todoId"
+            component={TodoPage}
             userToken={userToken}
           ></ProtectedRoute>
         </Switch>

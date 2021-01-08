@@ -79,3 +79,65 @@ export function toggleCompleted(uToken, taskId, isCompleted) {
 }
 
 
+export function getSingleTask(uToken, taskId) {
+    try {
+        return axios({
+            method: 'GET',
+            url: `${API_MAIN_URL_TASk}/${taskId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': uToken
+            },
+        }).then((res) => {
+            console.log(res);
+            return res;
+        });
+    } catch (error) {
+
+    }
+}
+
+
+export function updateTask(uToken, taskId, description) {
+    try {
+        return axios({
+            method: 'PUT',
+            url: `${API_MAIN_URL_TASk}/${taskId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': uToken
+            },
+            data: {
+                "description": description
+            }
+        }).then((res) => {
+            console.log(res);
+            return res;
+        });
+    } catch (error) {
+
+    }
+}
+
+export function toggleCompletedFull(uToken, taskId, isCompleted, descripton) {
+    debugger
+    try {
+        return axios({
+            method: 'PUT',
+            url: `${API_MAIN_URL_TASk}/${taskId}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': uToken
+            },
+            data: {
+                "completed": !isCompleted,
+                'description': descripton
+            }
+        }).then((res) => {
+            console.log(res);
+            return res;
+        });
+    } catch (error) {
+
+    }
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as todoservice from "../../../Services/TodosService";
-
+import './Todo.scss'
+import { Link } from 'react-router-dom';
 const Todo = ({ task, allTasks, setallTasks }) => {
   let utoken = "";
   const [taskIsLoadingCompleted, settaskIsLoadingCompleted] = useState(false);
@@ -52,9 +53,9 @@ const Todo = ({ task, allTasks, setallTasks }) => {
   return (
     <>
       <div className="todo">
-        <li className={`todo-item ${task.completed && "completed"}`}>
+        <Link to={`/todolist/${task._id}`} className={`todo-item d-block flex-110 ${task.completed && "completed"}`}>
           {task.description}
-        </li>
+        </Link>
         <button
           className="complete-btn"
           onClick={() => toggleCompleted(task._id, task.completed)}
