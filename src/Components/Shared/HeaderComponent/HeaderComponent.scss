@@ -16,6 +16,15 @@ nav {
 .navbar-collapse {
   transition-duration: 10s !important;
   text-align: center;
+
+
+  .nav-ul-margin{
+    margin-left: auto;
+
+    @media (max-width : 992px) {
+      margin-right: auto;
+    }
+  }
 }
 .nav-item {
   display: inline-flex;

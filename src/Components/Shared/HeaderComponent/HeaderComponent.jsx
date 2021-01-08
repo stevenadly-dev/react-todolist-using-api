@@ -4,7 +4,7 @@ import { Navbar, NavDropdown, Nav } from "react-bootstrap";
 import * as authservice from "../../../Services/AuthService";
 import { useHistory, Link } from "react-router-dom";
 
-function HeaderComponent({ userToken }) {
+function HeaderComponent({ userToken, setUserToken }) {
   const history = useHistory();
 
   const onLogoutHandler = (e) => {
@@ -12,6 +12,7 @@ function HeaderComponent({ userToken }) {
     authservice.logout(userToken).then((res) => {
       console.log("logout res", res);
       localStorage.removeItem("todoToken");
+      setUserToken('');
       history.push("/login");
     });
   };
@@ -24,8 +25,8 @@ function HeaderComponent({ userToken }) {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto">
-              <ul className="navbar-nav ml-auto">
+            <Nav className="nav-ul-margin">
+              <ul className="navbar-nav">
                 <li className="nav-item">
                   <Link to="/" className="nav-link">
                     Home

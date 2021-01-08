@@ -53,8 +53,10 @@ const Todo = ({ task, allTasks, setallTasks }) => {
   return (
     <>
       <div className="todo">
-        <Link to={`/todolist/${task._id}`} className={`todo-item d-block flex-110 ${task.completed && "completed"}`}>
-          {task.description}
+        <Link to={`/todolist/${task._id}`} className="d-block flex-110 ">
+          <li className={`todo-item d-block flex-110 ${task.completed && "completed"}`}>
+            {task.description}
+          </li>
         </Link>
         <button
           className="complete-btn"
