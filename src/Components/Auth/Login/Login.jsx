@@ -5,7 +5,7 @@ import * as authservices from "../../../Services/AuthService";
 import { userTokenContext } from "../../../App";
 import { useHistory } from "react-router-dom";
 import Loader from "../../Shared/Loader/Loader";
-
+import Field from '../../Shared/Field/Field';
 const Login = ({ userToken, setUserToken }) => {
   let newUser = useContext(userTokenContext);
   const [user, setUser] = useState({
@@ -14,6 +14,10 @@ const Login = ({ userToken, setUserToken }) => {
   });
   const [isLoading, setisLoading] = useState(false);
   const history = useHistory();
+  let fields = [
+    { type: 'text', label: 'E-mail', name: "email", id: "", className: "form-control", placeholder: "example : demo@demo.com" },
+    { type: 'password', label: 'Password', name: "password", id: "", className: "form-control", placeholder: "enter your password" },
+  ]
 
   let onchangeInput = (e) => {
     setUser({
@@ -53,9 +57,18 @@ const Login = ({ userToken, setUserToken }) => {
                 <h3 className="title">login</h3>
 
                 <form className="form" onSubmit={onSubmitForm}>
-                  <div className="form-group">
-                    <label>E-mail</label>
 
+                  {fields && fields.map((field, fieldIndex) => {
+                    return (
+                      <Field {...field} key={fieldIndex}
+                        value={user[field.name]}
+                        onChange={onchangeInput} />
+                    )
+                  })}
+
+
+                  {/* <div className="form-group">
+                    <label>E-mail</label>
                     <input
                       type="text"
                       name="email"
@@ -66,6 +79,7 @@ const Login = ({ userToken, setUserToken }) => {
                       onChange={onchangeInput}
                     />
                   </div>
+
                   <div className="form-group">
                     <label>Password</label>
                     <input
@@ -77,7 +91,7 @@ const Login = ({ userToken, setUserToken }) => {
                       value={user.password}
                       onChange={onchangeInput}
                     />
-                  </div>
+                  </div> */}
 
                   <Link to="/register" className="reg-link">
                     register new account

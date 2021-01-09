@@ -6,6 +6,9 @@
   font-weight: bold !important;
   box-sizing: border-box;
 }
+html{
+  scroll-behavior: smooth;
+}
 .form-control {
   border: 1px solid black;
   border-radius: 2px;
