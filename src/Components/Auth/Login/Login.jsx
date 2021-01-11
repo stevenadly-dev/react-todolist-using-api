@@ -6,12 +6,14 @@ import { userTokenContext } from "../../../App";
 import { useHistory } from "react-router-dom";
 import Loader from "../../Shared/Loader/Loader";
 import Field from '../../Shared/Field/Field';
-const Login = ({ userToken, setUserToken }) => {
-  let newUser = useContext(userTokenContext);
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
+import { useFormik, withFormik, Formik } from 'formik';
+// import { Formik } from 'formik';
+
+
+
+
+const Login = (props) => {
+
   const [isLoading, setisLoading] = useState(false);
   const history = useHistory();
   let fields = [
@@ -19,33 +21,58 @@ const Login = ({ userToken, setUserToken }) => {
     { type: 'password', label: 'Password', name: "password", id: "", className: "form-control", placeholder: "enter your password" },
   ]
 
-  let onchangeInput = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
+  // ================================================================================
 
-    console.log(newUser);
-    // console.log("userToken", userToken);
-  };
 
-  let onSubmitForm = (e) => {
-    e.preventDefault();
-    setisLoading(true);
-    authservices.login(user).then((res) => {
-      setisLoading(false);
-      localStorage.setItem("todoToken", JSON.stringify(res.token));
-      setUserToken(res.token);
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
 
-      setUser({
-        email: "",
-        password: "",
+    },
+
+    validate: values => {
+      const errors = {};
+      Object.keys(values).map(v => {
+        if (!values[v]) {
+          errors[v] = 'required'
+        }
+      })
+
+
+      if (values.email) {
+        if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+          errors.email = 'Invalid email address';
+        }
+      }
+
+      if (values.password) {
+        if (values.password.length < 8) {
+          errors.password = 'should be at least 8 charcters';
+        }
+      }
+      return errors;
+    },
+
+    onSubmit: values => {
+      setisLoading(true);
+      authservices.login(values).then((res) => {
+        setisLoading(false);
+        localStorage.setItem("todoToken", JSON.stringify(res.token));
+        props.setUserToken(res.token);
+        history.push("/todolist");
+
       });
-      history.push("/todolist");
+    },
+    handleSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting, setisLoading, setUser, history }) => {
+      debugger
+    }
+  });
 
-      // console.log(res);
-    });
-  };
+  // ================================================================================
+
+
+
   return (
     <>
       <section className="login-section">
@@ -56,13 +83,23 @@ const Login = ({ userToken, setUserToken }) => {
                 {isLoading && <Loader />}
                 <h3 className="title">login</h3>
 
-                <form className="form" onSubmit={onSubmitForm}>
+                <form className="form"
+                  // onSubmit={onSubmitForm}
+                  onSubmit={formik.handleSubmit}
+                >
 
                   {fields && fields.map((field, fieldIndex) => {
                     return (
-                      <Field {...field} key={fieldIndex}
-                        value={user[field.name]}
-                        onChange={onchangeInput} />
+                      <Field {...field}
+                        key={fieldIndex}
+                        // field name (email , password)
+                        value={formik.values[field.name]}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        touched={formik.touched[field.name]}
+                        errors={formik.errors[field.name]}
+
+                      />
                     )
                   })}
 
@@ -100,7 +137,9 @@ const Login = ({ userToken, setUserToken }) => {
                   <button
                     className="submit"
                     value="submit"
+                    type="submit"
                     className="submit-btn"
+                    disabled={!(formik.isValid && formik.dirty)}
                   >
                     Submit
                   </button>
@@ -114,4 +153,4 @@ const Login = ({ userToken, setUserToken }) => {
   );
 };
 
-export default Login;
+export default (Login);

@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Field(props) {
-    console.log(props);
+
     return (
         <div className="form-group">
             <label>{props.label}</label>
@@ -13,7 +13,15 @@ function Field(props) {
                 placeholder={props.placeholder}
                 value={props.value}
                 onChange={props.onChange}
+                onBlur={props.onBlur}
+                // touched={props.touched}
+                errors={props.errors}
+
             />
+
+            <p className="text-danger">
+                {props.touched && props.errors && props.errors}
+            </p>
         </div>
     )
 }
