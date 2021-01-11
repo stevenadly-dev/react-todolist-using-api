@@ -1,8 +1,20 @@
 import React from "react";
 import "./Home.scss";
+import * as authservices from '../../Services/AuthService';
+import { useHistory } from "react-router-dom";
 
-let getStarted = () => {};
+
 function Home() {
+
+
+  let history = useHistory();
+  let getStarted = () => {
+    if (authservices.checkAuthentication()) {
+      history.push('/todolist')
+    } else {
+      history.push('/login')
+    }
+  };
   return (
     <section className="home">
       <div className="content">
