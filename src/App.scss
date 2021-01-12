@@ -9,6 +9,7 @@
 html{
   scroll-behavior: smooth;
 }
+
 .form-control {
   border: 1px solid black;
   border-radius: 2px;
@@ -35,6 +36,17 @@ label {
   font-size: 1.5em;
 }
 
+
+// =========================general classes (utils)
+.c-black{
+  color:$black;
+}
+.c-blue{
+  color:$blue;
+}
+
+
+// ---------------------------------------to replace the rght scroll
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;

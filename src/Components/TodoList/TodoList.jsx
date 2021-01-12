@@ -4,6 +4,8 @@ import TodoForm from "./TodoForm/TodoForm";
 import Todo from "./Todo/Todo";
 import * as todoservice from "../../Services/TodosService";
 import Loader from "../Shared/Loader/Loader";
+import Pagination from "../Shared/Pagination/Pagination";
+
 
 const TodoList = () => {
   let utoken = "";
@@ -14,11 +16,15 @@ const TodoList = () => {
   let [allTasks, setallTasks] = useState([]);
   let [filteredallTasks, setfilteredallTasks] = useState([]);
 
-
   let [filterByValue, setfilterByValue] = useState(0);
   const [listLoading, setlistLoading] = useState(false);
 
+  const [selectedPage, setSelectedPage] = React.useState(1);
 
+
+  let [tasksInView, settasksInView] = useState([]);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [page, setPage] = React.useState(1);
 
 
   let getAllTasks = () => {
@@ -75,6 +81,22 @@ const TodoList = () => {
   }, [allTasks, filterByValue])
 
 
+  let paginationFn = () => {
+    if (!(filteredallTasks && filteredallTasks.length > 0)) {
+      settasksInView([])
+      return;
+    } else {
+      let list = [...filteredallTasks]
+      settasksInView(list.slice(pageSize * (page - 1), pageSize * page));
+    }
+  }
+
+  useEffect(() => {
+
+    paginationFn();
+  }, [filteredallTasks, page, pageSize])
+
+
   let filterBy = () => {
     let allTasksCpy = [...allTasks];
 
@@ -108,9 +130,9 @@ const TodoList = () => {
         <div className="row">
           <div className="col-md-6 offset-md-3">
             <ul className="todo-list">
-              {listLoading && filteredallTasks && <Loader />}
-              {filteredallTasks &&
-                filteredallTasks.map((task) => {
+              {listLoading && tasksInView && <Loader />}
+              {tasksInView &&
+                tasksInView.map((task) => {
                   return (
                     <Todo
                       key={task._id}
@@ -123,6 +145,18 @@ const TodoList = () => {
 
               {/* <Todo /> */}
             </ul>
+
+            {!listLoading && tasksInView.length > 0 &&
+              <Pagination
+                pageSize={pageSize}
+                page={page}
+                count={filteredallTasks?.length ?? 0}
+                onChange={(t, v) => {
+                  if (t === 1) setPageSize(v);
+                  else if (t === 2) setPage(v);
+                }}
+              />}
+
           </div>
         </div>
       </div>

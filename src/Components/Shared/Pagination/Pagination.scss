@@ -1,0 +1,15 @@
+@import "../../../scss/variables";
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+.align-center-vh{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
