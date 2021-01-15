@@ -7,6 +7,8 @@ import { useHistory } from "react-router-dom";
 function Home() {
 
 
+
+
   let history = useHistory();
   let getStarted = () => {
     if (authservices.checkAuthentication()) {

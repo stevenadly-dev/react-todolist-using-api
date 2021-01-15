@@ -96,6 +96,38 @@ export function logout(uToken) {
     }
 }
 
+// Get Logged In User via Token
+export function getLoggednUser(uToken) {
+    try {
+        return axios({
+            method: 'GET',
+            url: `${API_MAIN_URL_USER}/me`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': uToken
+            },
+        }).then((res) => {
+            return res.data
+        })
+    } catch (error) {
+        if (error.response) {
+            debugger
+            //do something
+        } else if (error.request) {
+            debugger
+
+            //do something else
+
+        } else if (error.message) {
+            debugger
+
+            //do something other than the other two
+
+        }
+        // console.log('Registeration Error happenned !!', err)
+    }
+}
+
 export function checkAuthentication() {
 
 

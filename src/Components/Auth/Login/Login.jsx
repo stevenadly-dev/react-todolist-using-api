@@ -7,8 +7,6 @@ import { useHistory } from "react-router-dom";
 import Loader from "../../Shared/Loader/Loader";
 import Field from '../../Shared/Field/Field';
 import { useFormik, withFormik, Formik } from 'formik';
-// import { Formik } from 'formik';
-
 
 
 
@@ -37,6 +35,7 @@ const Login = (props) => {
         if (!values[v]) {
           errors[v] = 'required'
         }
+
       })
 
 
@@ -92,7 +91,7 @@ const Login = (props) => {
                     return (
                       <Field {...field}
                         key={fieldIndex}
-                        // field name (email , password)
+                        // field.name (email , password)
                         value={formik.values[field.name]}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}

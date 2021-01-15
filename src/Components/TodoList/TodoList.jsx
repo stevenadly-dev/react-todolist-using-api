@@ -3,6 +3,7 @@ import "./TodoList.scss";
 import TodoForm from "./TodoForm/TodoForm";
 import Todo from "./Todo/Todo";
 import * as todoservice from "../../Services/TodosService";
+import * as authservices from "../../Services/AuthService";
 import Loader from "../Shared/Loader/Loader";
 import Pagination from "../Shared/Pagination/Pagination";
 
@@ -70,9 +71,16 @@ const TodoList = () => {
     addTask();
   };
 
+  let getLoggedInUser = () => {
+    utoken = JSON.parse(localStorage.getItem("todoToken"));
+    authservices.getLoggednUser(utoken).then(res => {
+      console.log('getLoggednUser', res);
+    })
+  }
 
   useEffect(() => {
     getAllTasks();
+    getLoggedInUser();
   }, []);
 
 
