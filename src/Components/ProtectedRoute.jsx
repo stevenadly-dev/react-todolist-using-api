@@ -1,25 +1,22 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-class ProtectedRoute extends React.Component {
-  render() {
-    const Component = this.props.component;
-    let isAuthenticated = false;
-    if (
-      localStorage.getItem("todoToken") === null ||
-      localStorage.getItem("todoToken") === ""
-    ) {
-      isAuthenticated = false;
-    } else {
-      isAuthenticated = true;
-    }
+let mapStateToProps = (state) => {
+  return {
+    authToken: state.auth.authToken,
+  };
+};
 
-    return isAuthenticated ? (
-      <Component {...this.props} />
-    ) : (
-      <Redirect to={{ pathname: "/login" }} />
-    );
-  }
-}
+const ProtectedRoute = (props) => {
+  let { component, authToken } = props;
+  const Component = component;
 
-export default ProtectedRoute;
+  return authToken ? (
+    <Component {...props} />
+  ) : (
+    <Redirect to={{ pathname: "/login" }} />
+  );
+};
+
+export default connect(mapStateToProps)(ProtectedRoute);

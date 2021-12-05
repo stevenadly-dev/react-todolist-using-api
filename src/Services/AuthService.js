@@ -33,67 +33,25 @@ export function registeration(userData) {
 
 
 export function login(userData) {
-    try {
-
-
-        return axios({
-            method: 'POST',
-            url: `${API_MAIN_URL_USER}/login`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            data: userData,
-        }).then((res) => {
-            return res.data
-        })
-    } catch (error) {
-        if (error.response) {
-            debugger
-            //do something
-        } else if (error.request) {
-            debugger
-
-            //do something else
-
-        } else if (error.message) {
-            debugger
-
-            //do something other than the other two
-
-        }
-        // console.log('Registeration Error happenned !!', err)
-    }
+    return axios({
+        method: 'POST',
+        url: `${API_MAIN_URL_USER}/login`,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        data: userData,
+    })
 }
 
 export function logout(uToken) {
-    try {
-        return axios({
-            method: 'POST',
-            url: `${API_MAIN_URL_USER}/logout`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': uToken
-            },
-        }).then((res) => {
-            return res.data
-        })
-    } catch (error) {
-        if (error.response) {
-            debugger
-            //do something
-        } else if (error.request) {
-            debugger
-
-            //do something else
-
-        } else if (error.message) {
-            debugger
-
-            //do something other than the other two
-
-        }
-        // console.log('Registeration Error happenned !!', err)
-    }
+    return axios({
+        method: 'POST',
+        url: `${API_MAIN_URL_USER}/logout`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': uToken
+        },
+    })
 }
 
 // Get Logged In User via Token

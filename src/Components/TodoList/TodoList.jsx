@@ -6,13 +6,22 @@ import * as todoservice from "../../Services/TodosService";
 import * as authservices from "../../Services/AuthService";
 import Loader from "../Shared/Loader/Loader";
 import Pagination from "../Shared/Pagination/Pagination";
+import { connect } from "react-redux";
 
+let mapStateToProps = (state) => {
+  return {
+    authToken: state.auth.authToken,
+  };
+};
+// let mapDispatchToProps = (dispatch) => {
+//   return;
+// };
 
-const TodoList = () => {
-  let utoken = "";
-  let [toAddTask, settoAddTask] = useState({
-    description: "",
-  });
+const TodoList = (props) => {
+  let { authToken } = props;
+  console.log("authToken @todolist", authToken);
+  // let utoken = "";
+  let [toAddTask, settoAddTask] = useState({ description: "" });
 
   let [allTasks, setallTasks] = useState([]);
   let [filteredallTasks, setfilteredallTasks] = useState([]);
@@ -22,27 +31,22 @@ const TodoList = () => {
 
   const [selectedPage, setSelectedPage] = React.useState(1);
 
-
   let [tasksInView, settasksInView] = useState([]);
   const [pageSize, setPageSize] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
-
   let getAllTasks = () => {
     setlistLoading(true);
-    utoken = JSON.parse(localStorage.getItem("todoToken"));
-    todoservice.getAllTasks(utoken).then((res) => {
-
+    todoservice.getAllTasks(authToken).then((res) => {
       console.log(res.data.data);
       // res.data.data.fore
 
       let newData = [];
       res.data.data.forEach((element, index) => {
-        element['isLoadingDelete'] = false;
-        element['isLoadingToggle'] = false;
+        element["isLoadingDelete"] = false;
+        element["isLoadingToggle"] = false;
 
-        newData.push(element)
-
+        newData.push(element);
       });
       setallTasks(newData);
       setlistLoading(false);
@@ -50,12 +54,10 @@ const TodoList = () => {
   };
 
   let addTask = () => {
-    utoken = JSON.parse(localStorage.getItem("todoToken"));
-    todoservice.addTask(utoken, toAddTask).then((res) => {
+    todoservice.addTask(authToken, toAddTask).then((res) => {
       if (res.data.success) {
-
-        res.data.data['isLoadingDelete'] = false;
-        res.data.data['isLoadingToggle'] = false;
+        res.data.data["isLoadingDelete"] = false;
+        res.data.data["isLoadingToggle"] = false;
 
         setallTasks([...allTasks, res.data.data]);
         settoAddTask({
@@ -72,38 +74,33 @@ const TodoList = () => {
   };
 
   let getLoggedInUser = () => {
-    utoken = JSON.parse(localStorage.getItem("todoToken"));
-    authservices.getLoggednUser(utoken).then(res => {
-      console.log('getLoggednUser', res);
-    })
-  }
+    authservices.getLoggednUser(authToken).then((res) => {
+      console.log("getLoggednUser", res);
+    });
+  };
 
   useEffect(() => {
     getAllTasks();
     getLoggedInUser();
   }, []);
 
-
   useEffect(() => {
     filterBy();
-  }, [allTasks, filterByValue])
-
+  }, [allTasks, filterByValue]);
 
   let paginationFn = () => {
     if (!(filteredallTasks && filteredallTasks.length > 0)) {
-      settasksInView([])
+      settasksInView([]);
       return;
     } else {
-      let list = [...filteredallTasks]
+      let list = [...filteredallTasks];
       settasksInView(list.slice(pageSize * (page - 1), pageSize * page));
     }
-  }
+  };
 
   useEffect(() => {
-
     paginationFn();
-  }, [filteredallTasks, page, pageSize])
-
+  }, [filteredallTasks, page, pageSize]);
 
   let filterBy = () => {
     let allTasksCpy = [...allTasks];
@@ -113,24 +110,34 @@ const TodoList = () => {
         setfilteredallTasks(allTasksCpy);
         break;
       case 1:
-        let newFilteredCpy = allTasksCpy.filter(el => { return el.completed === true });
+        let newFilteredCpy = allTasksCpy.filter((el) => {
+          return el.completed === true;
+        });
         setfilteredallTasks(newFilteredCpy);
         break;
       case 2:
-        let newFilteredCpy2 = allTasksCpy.filter(el => el.completed === false);
+        let newFilteredCpy2 = allTasksCpy.filter(
+          (el) => el.completed === false
+        );
         setfilteredallTasks(newFilteredCpy2);
         break;
       default:
       // code block
     }
-  }
+  };
   return (
+    // <h1>
+    //   Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem
+    //   repudiandae nulla, consectetur necessitatibus dicta id, quidem eius illum
+    //   quae, ullam vel accusamus esse ex mollitia at quaerat ipsam reiciendis
+    //   modi? -
+    // </h1>
+
     <section className="todo-home-section">
       <TodoForm
         toAddTask={toAddTask}
         settoAddTask={settoAddTask}
         onSubmitForm={onSubmitForm}
-
         filterByValue={filterByValue}
         setfilterByValue={setfilterByValue}
       />
@@ -154,7 +161,7 @@ const TodoList = () => {
               {/* <Todo /> */}
             </ul>
 
-            {!listLoading && tasksInView.length > 0 &&
+            {!listLoading && tasksInView.length > 0 && (
               <Pagination
                 pageSize={pageSize}
                 page={page}
@@ -163,8 +170,8 @@ const TodoList = () => {
                   if (t === 1) setPageSize(v);
                   else if (t === 2) setPage(v);
                 }}
-              />}
-
+              />
+            )}
           </div>
         </div>
       </div>
@@ -172,4 +179,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default connect(mapStateToProps)(TodoList);

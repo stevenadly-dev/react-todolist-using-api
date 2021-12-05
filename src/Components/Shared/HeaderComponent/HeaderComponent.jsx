@@ -3,18 +3,33 @@ import "./HeaderComponent.scss";
 import { Navbar, NavDropdown, Nav } from "react-bootstrap";
 import * as authservice from "../../../Services/AuthService";
 import { useHistory, Link } from "react-router-dom";
+import { logoutAction } from "../../../Redux/auth/authActions";
+import { connect } from "react-redux";
 
-function HeaderComponent({ userToken, setUserToken }) {
+let mapStateToProps = (state) => {
+  return {
+    authToken: state.auth.authToken,
+  };
+};
+let mapDispatchToProps = (dispatch) => {
+  return { logoutFn: (uToken) => dispatch(logoutAction(uToken)) };
+};
+
+function HeaderComponent({ authToken, logoutFn }) {
+  // console.log("props of Header ", props);
+
   const history = useHistory();
 
   const onLogoutHandler = (e) => {
     e.preventDefault();
-    authservice.logout(userToken).then((res) => {
-      console.log("logout res", res);
-      localStorage.removeItem("todoToken");
-      setUserToken('');
-      history.push("/login");
-    });
+    // console.log("props of Header ", props);
+
+    // authservice.logout(userToken).then((res) => {
+    //   console.log("logout res", res);
+    //   localStorage.removeItem("todoToken");
+    //   setUserToken("");
+    //   history.push("/login");
+    // });
   };
   return (
     <>
@@ -33,32 +48,31 @@ function HeaderComponent({ userToken, setUserToken }) {
                   </Link>
                 </li>
 
-                {!authservice.checkAuthentication() ||
-                  (!userToken && (
-                    <li className="nav-item">
-                      <Link to="/login" className="nav-link">
-                        Login
-                      </Link>
-                    </li>
-                  ))}
-                {!authservice.checkAuthentication() ||
-                  (!userToken && (
-                    <li className="nav-item">
-                      <Link to="/register" className="nav-link">
-                        Registeration
-                      </Link>
-                    </li>
-                  ))}
-                {authservice.checkAuthentication() && userToken && (
+                {!authToken && (
+                  <li className="nav-item">
+                    <Link to="/login" className="nav-link">
+                      Login
+                    </Link>
+                  </li>
+                )}
+                {!authToken && (
+                  <li className="nav-item">
+                    <Link to="/register" className="nav-link">
+                      Registeration
+                    </Link>
+                  </li>
+                )}
+                {authToken && (
                   <li className="nav-item">
                     <Link to="/todolist" className="nav-link">
                       todolist
                     </Link>
                   </li>
                 )}
-                {authservice.checkAuthentication() && userToken && (
+
+                {authToken && (
                   <li className="nav-item">
-                    <a className="nav-link" onClick={onLogoutHandler}>
+                    <a className="nav-link" onClick={() => logoutFn(authToken)}>
                       Logout
                     </a>
                   </li>
@@ -72,4 +86,4 @@ function HeaderComponent({ userToken, setUserToken }) {
   );
 }
 
-export default HeaderComponent;
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderComponent);

@@ -5,72 +5,98 @@ import * as authservices from "../../../Services/AuthService";
 import { userTokenContext } from "../../../App";
 import { useHistory } from "react-router-dom";
 import Loader from "../../Shared/Loader/Loader";
-import Field from '../../Shared/Field/Field';
-import { useFormik, withFormik, Formik } from 'formik';
+import Field from "../../Shared/Field/Field";
+import { useFormik, withFormik, Formik } from "formik";
+import { loginAction } from "../../../Redux/auth/authActions";
+import { connect } from "react-redux";
 
-
+let mapStateToProps = (state) => {
+  return {
+    // users: state.users,
+  };
+};
+let mapDispatchToProps = (dispatch) => {
+  return { loginFn: (userData) => dispatch(loginAction(userData)) };
+};
 
 const Login = (props) => {
-
   const [isLoading, setisLoading] = useState(false);
   const history = useHistory();
   let fields = [
-    { type: 'text', label: 'E-mail', name: "email", id: "", className: "form-control", placeholder: "example : demo@demo.com" },
-    { type: 'password', label: 'Password', name: "password", id: "", className: "form-control", placeholder: "enter your password" },
-  ]
+    {
+      type: "text",
+      label: "E-mail",
+      name: "email",
+      id: "",
+      className: "form-control",
+      placeholder: "example : demo@demo.com",
+    },
+    {
+      type: "password",
+      label: "Password",
+      name: "password",
+      id: "",
+      className: "form-control",
+      placeholder: "enter your password",
+    },
+  ];
 
   // ================================================================================
-
-
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
-
+      email: "",
+      password: "",
     },
 
-    validate: values => {
+    validate: (values) => {
       const errors = {};
-      Object.keys(values).map(v => {
+      Object.keys(values).map((v) => {
         if (!values[v]) {
-          errors[v] = 'required'
+          errors[v] = "required";
         }
-
-      })
-
+      });
 
       if (values.email) {
         if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-          errors.email = 'Invalid email address';
+          errors.email = "Invalid email address";
         }
       }
 
       if (values.password) {
         if (values.password.length < 8) {
-          errors.password = 'should be at least 8 charcters';
+          errors.password = "should be at least 8 charcters";
         }
       }
       return errors;
     },
 
-    onSubmit: values => {
-      setisLoading(true);
-      authservices.login(values).then((res) => {
-        setisLoading(false);
-        localStorage.setItem("todoToken", JSON.stringify(res.token));
-        props.setUserToken(res.token);
-        history.push("/todolist");
-
-      });
+    onSubmit: (values) => {
+      props.loginFn(values);
+      // setisLoading(true);
+      // authservices.login(values).then((res) => {
+      //   setisLoading(false);
+      //   localStorage.setItem("todoToken", JSON.stringify(res.token));
+      //   props.setUserToken(res.token);
+      // history.push("/todolist");
+      debugger;
+      // });
     },
-    handleSubmit: (values, { resetForm, setErrors, setStatus, setSubmitting, setisLoading, setUser, history }) => {
-      debugger
-    }
+    handleSubmit: (
+      values,
+      {
+        resetForm,
+        setErrors,
+        setStatus,
+        setSubmitting,
+        setisLoading,
+        setUser,
+        history,
+      }
+    ) => {
+      debugger;
+    },
   });
-
   // ================================================================================
-
-
 
   return (
     <>
@@ -82,26 +108,26 @@ const Login = (props) => {
                 {isLoading && <Loader />}
                 <h3 className="title">login</h3>
 
-                <form className="form"
+                <form
+                  className="form"
                   // onSubmit={onSubmitForm}
                   onSubmit={formik.handleSubmit}
                 >
-
-                  {fields && fields.map((field, fieldIndex) => {
-                    return (
-                      <Field {...field}
-                        key={fieldIndex}
-                        // field.name (email , password)
-                        value={formik.values[field.name]}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        touched={formik.touched[field.name]}
-                        errors={formik.errors[field.name]}
-
-                      />
-                    )
-                  })}
-
+                  {fields &&
+                    fields.map((field, fieldIndex) => {
+                      return (
+                        <Field
+                          {...field}
+                          key={fieldIndex}
+                          // field.name (email , password)
+                          value={formik.values[field.name]}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          touched={formik.touched[field.name]}
+                          errors={formik.errors[field.name]}
+                        />
+                      );
+                    })}
 
                   {/* <div className="form-group">
                     <label>E-mail</label>
@@ -152,4 +178,4 @@ const Login = (props) => {
   );
 };
 
-export default (Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
