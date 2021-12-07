@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import "./TodoList.scss";
 import TodoForm from "./TodoForm/TodoForm";
 import Todo from "./Todo/Todo";
@@ -7,19 +7,39 @@ import * as authservices from "../../Services/AuthService";
 import Loader from "../Shared/Loader/Loader";
 import Pagination from "../Shared/Pagination/Pagination";
 import { connect } from "react-redux";
+import {
+  changeTodosListFilter,
+  fetchTodosList,
+  test,
+} from "../../Redux/Todos/todosAction";
 
 let mapStateToProps = (state) => {
   return {
     authToken: state.auth.authToken,
+    todosList: state.todos.todosList,
+    listLoading: state.todos.listLoading,
+    filteredTodosList: state.todos.filteredTodosList,
   };
 };
-// let mapDispatchToProps = (dispatch) => {
-//   return;
-// };
+let mapDispatchToProps = (dispatch) => {
+  return {
+    fetchTodosList: (uToken) => dispatch(fetchTodosList(uToken)),
+    changeTodosListFilter: (filterType, allTodos) =>
+      dispatch(changeTodosListFilter(filterType, allTodos)),
+    test: () => dispatch(test()),
+  };
+};
 
 const TodoList = (props) => {
-  let { authToken } = props;
-  console.log("authToken @todolist", authToken);
+  let {
+    authToken,
+    fetchTodosList,
+    todosList,
+    listLoading,
+    filteredTodosList,
+    changeTodosListFilter,
+  } = props;
+  console.log("authToken @todolist", props);
   // let utoken = "";
   let [toAddTask, settoAddTask] = useState({ description: "" });
 
@@ -27,31 +47,13 @@ const TodoList = (props) => {
   let [filteredallTasks, setfilteredallTasks] = useState([]);
 
   let [filterByValue, setfilterByValue] = useState(0);
-  const [listLoading, setlistLoading] = useState(false);
+  // const [listLoading, setlistLoading] = useState(false);
 
   const [selectedPage, setSelectedPage] = React.useState(1);
 
   let [tasksInView, settasksInView] = useState([]);
-  const [pageSize, setPageSize] = React.useState(10);
-  const [page, setPage] = React.useState(1);
-
-  let getAllTasks = () => {
-    setlistLoading(true);
-    todoservice.getAllTasks(authToken).then((res) => {
-      console.log(res.data.data);
-      // res.data.data.fore
-
-      let newData = [];
-      res.data.data.forEach((element, index) => {
-        element["isLoadingDelete"] = false;
-        element["isLoadingToggle"] = false;
-
-        newData.push(element);
-      });
-      setallTasks(newData);
-      setlistLoading(false);
-    });
-  };
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
 
   let addTask = () => {
     todoservice.addTask(authToken, toAddTask).then((res) => {
@@ -59,7 +61,7 @@ const TodoList = (props) => {
         res.data.data["isLoadingDelete"] = false;
         res.data.data["isLoadingToggle"] = false;
 
-        setallTasks([...allTasks, res.data.data]);
+        // setallTasks([...allTasks, res.data.data]);
         settoAddTask({
           description: "",
         });
@@ -73,86 +75,77 @@ const TodoList = (props) => {
     addTask();
   };
 
-  let getLoggedInUser = () => {
-    authservices.getLoggednUser(authToken).then((res) => {
-      console.log("getLoggednUser", res);
-    });
-  };
-
   useEffect(() => {
-    getAllTasks();
-    getLoggedInUser();
+    fetchTodosList(authToken);
   }, []);
 
-  useEffect(() => {
-    filterBy();
-  }, [allTasks, filterByValue]);
+  useLayoutEffect(() => {
+    // filterBy();
+    changeTodosListFilter(filterByValue, todosList);
+  }, [filterByValue]);
 
   let paginationFn = () => {
-    if (!(filteredallTasks && filteredallTasks.length > 0)) {
+    if (!(filteredTodosList && filteredTodosList.length > 0)) {
       settasksInView([]);
       return;
     } else {
-      let list = [...filteredallTasks];
+      let list = [...filteredTodosList];
       settasksInView(list.slice(pageSize * (page - 1), pageSize * page));
     }
   };
 
   useEffect(() => {
     paginationFn();
-  }, [filteredallTasks, page, pageSize]);
+  }, [filteredTodosList, page, pageSize]);
 
-  let filterBy = () => {
-    let allTasksCpy = [...allTasks];
+  // let filterBy = () => {
+  //   let allTasksCpy = [...filteredTodosList];
 
-    switch (+filterByValue) {
-      case 0:
-        setfilteredallTasks(allTasksCpy);
-        break;
-      case 1:
-        let newFilteredCpy = allTasksCpy.filter((el) => {
-          return el.completed === true;
-        });
-        setfilteredallTasks(newFilteredCpy);
-        break;
-      case 2:
-        let newFilteredCpy2 = allTasksCpy.filter(
-          (el) => el.completed === false
-        );
-        setfilteredallTasks(newFilteredCpy2);
-        break;
-      default:
-      // code block
-    }
-  };
+  //   switch (+filterByValue) {
+  //     case 0:
+  //       setfilteredallTasks(allTasksCpy);
+  //       break;
+  //     case 1:
+  //       let newFilteredCpy = allTasksCpy.filter((el) => {
+  //         return el.completed === true;
+  //       });
+  //       setfilteredallTasks(newFilteredCpy);
+  //       break;
+  //     case 2:
+  //       let newFilteredCpy2 = allTasksCpy.filter(
+  //         (el) => el.completed === false
+  //       );
+  //       setfilteredallTasks(newFilteredCpy2);
+  //       break;
+  //     default:
+  //     // code block
+  //   }
+  // };
   return (
-    // <h1>
-    //   Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dolorem
-    //   repudiandae nulla, consectetur necessitatibus dicta id, quidem eius illum
-    //   quae, ullam vel accusamus esse ex mollitia at quaerat ipsam reiciendis
-    //   modi? -
-    // </h1>
-
     <section className="todo-home-section">
+      {/* <button onClick={() => changeTodosListFilter(filterByValue, todosList)}>
+        test
+      </button> */}
       <TodoForm
         toAddTask={toAddTask}
         settoAddTask={settoAddTask}
         onSubmitForm={onSubmitForm}
         filterByValue={filterByValue}
         setfilterByValue={setfilterByValue}
+        changeTodosListFilter={changeTodosListFilter}
       />
       <div className="container">
         <div className="row">
           <div className="col-md-6 offset-md-3">
             <ul className="todo-list">
-              {listLoading && tasksInView && <Loader />}
+              {listLoading && <Loader />}
               {tasksInView &&
                 tasksInView.map((task) => {
                   return (
                     <Todo
                       key={task._id}
                       task={task}
-                      allTasks={allTasks}
+                      allTasks={todosList}
                       setallTasks={setallTasks}
                     />
                   );
@@ -165,7 +158,7 @@ const TodoList = (props) => {
               <Pagination
                 pageSize={pageSize}
                 page={page}
-                count={filteredallTasks?.length ?? 0}
+                count={filteredTodosList?.length ?? 0}
                 onChange={(t, v) => {
                   if (t === 1) setPageSize(v);
                   else if (t === 2) setPage(v);
@@ -179,4 +172,4 @@ const TodoList = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(TodoList);
+export default connect(mapStateToProps, mapDispatchToProps)(TodoList);

@@ -7,15 +7,17 @@ import { authReducer } from "./auth/authReducer";
 
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
+import { todosReducer } from "./Todos/todosReducer";
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth']
+    whitelist: ['auth', 'todos']
 }
 
 
 const myCompinedReducer = combineReducers({
     auth: authReducer,
+    todos: todosReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, myCompinedReducer)

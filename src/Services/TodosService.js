@@ -3,21 +3,15 @@ import { API_MAIN_URL_TASk } from '../config';
 
 
 export function getAllTasks(uToken) {
-    try {
-        return axios({
-            method: 'GET',
-            url: `${API_MAIN_URL_TASk}`,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': uToken
-            },
-        }).then((res) => {
-            console.log(res);
-            return res;
-        });
-    } catch (error) {
+    return axios({
+        method: 'GET',
+        url: `${API_MAIN_URL_TASk}`,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': uToken
+        },
+    })
 
-    }
 }
 
 export function addTask(uToken, task) {
@@ -78,7 +72,6 @@ export function toggleCompleted(uToken, taskId, isCompleted) {
     }
 }
 
-
 export function getSingleTask(uToken, taskId) {
     try {
         return axios({
@@ -96,7 +89,6 @@ export function getSingleTask(uToken, taskId) {
 
     }
 }
-
 
 export function updateTask(uToken, taskId, description) {
     try {

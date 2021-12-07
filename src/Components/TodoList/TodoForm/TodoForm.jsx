@@ -1,8 +1,12 @@
 import React from "react";
 
-const TodoForm = ({ toAddTask, settoAddTask, onSubmitForm, filterByValue, setfilterByValue }) => {
-
-
+const TodoForm = ({
+  toAddTask,
+  settoAddTask,
+  onSubmitForm,
+  filterByValue,
+  setfilterByValue,
+}) => {
   let handleOnChange = (e) => {
     settoAddTask({
       ...toAddTask,
@@ -29,7 +33,12 @@ const TodoForm = ({ toAddTask, settoAddTask, onSubmitForm, filterByValue, setfil
           </div>
           <div className="col-md-4">
             <div className="select">
-              <select name="todos" className="filter-todo" value={filterByValue} onChange={(e) => setfilterByValue(e.target.value)}>
+              <select
+                name="todos"
+                className="filter-todo"
+                value={filterByValue}
+                onChange={(e) => setfilterByValue(e.target.value)}
+              >
                 <option value="0">All</option>
                 <option value="1">Completed</option>
                 <option value="2">Uncompleted</option>
